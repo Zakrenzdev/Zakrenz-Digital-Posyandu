@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Posyandu - Deteksi Stunting dengan AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+<body data-theme="dark">
+    <header>
+        <nav>
+            <div class="logo">
+                <i class="fas fa-baby"></i>
+                <span>Digital Posyandu</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Beranda</a></li>
+                <li><a href="#about">Tentang</a></li>
+                <li><a href="#checkup">Cek Stunting</a></li>
+                <li><a href="#education">Edukasi</a></li>
+                <li><a href="#contact">Kontak</a></li>
+            </ul>
+            <div class="nav-controls">
+                <div class="theme-toggle">
+                    <input type="checkbox" id="theme-switch" class="theme-switch">
+                    <label for="theme-switch" class="theme-label">
+                        <i class="fas fa-sun"></i>
+                        <i class="fas fa-moon"></i>
+                        <span class="theme-ball"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="animate-fade-in">Deteksi Dini Stunting dengan Teknologi AI</h1>
+            <p class="animate-fade-in">Pantau tumbuh kembang anak Anda secara real-time dengan teknologi kecerdasan artifisial untuk mencegah risiko stunting</p>
+            <a href="#checkup" class="cta-button animate-fade-in">Cek Sekarang <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="hero-image">
+            <div class="floating-card">
+                <i class="fas fa-brain"></i>
+                <h4>AI Powered</h4>
+                <p>Analisis cerdas dengan teknologi terbaru</p>
+            </div>
+            <div class="floating-card">
+                <i class="fas fa-shield-alt"></i>
+                <h4>Privasi Terjaga</h4>
+                <p>Data Anda aman dan terenkripsi</p>
+            </div>
+            <div class="image-placeholder animate-float">
+                <i class="fas fa-child"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about slide-in">
+        <div class="container">
+            <h2 class="section-title">Apa Itu Stunting?</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Stunting adalah kondisi gangguan pertumbuhan pada anak akibat kekurangan gizi kronis, infeksi berulang, dan stimulasi psikososial yang tidak memadai. Deteksi dini stunting sangat penting untuk mencegah dampak jangka panjang terhadap perkembangan fisik dan kognitif anak.</p>
+                    <div class="stats">
+                        <div class="stat animate-slide-in">
+                            <h3>21.6%</h3>
+                            <p>Prevalensi stunting di Indonesia (SSGI 2023)</p>
+                        </div>
+                        <div class="stat animate-slide-in">
+                            <h3>1 dari 5</h3>
+                            <p>Anak balita mengalami stunting</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="image-placeholder">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Checkup Section -->
+    <section id="checkup" class="checkup slide-in">
+        <div class="container">
+            <h2 class="section-title">Deteksi Stunting dengan AI</h2>
+            <p class="subtitle">Masukkan data anak Anda untuk melakukan pemeriksaan awal</p>
+            
+            <div class="checkup-container">
+                <div class="form-container">
+                    <form id="stunting-form">
+                        <div class="form-group">
+                            <label for="name">Nama Anak</label>
+                            <input type="text" id="name" placeholder="Masukkan nama anak" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="age">Usia (bulan)</label>
+                            <input type="number" id="age" min="0" max="60" placeholder="0-60 bulan" required>
+                        </div>
+                        
+<div class="form-group">
+  <label for="gender">Jenis Kelamin</label>
+  <div class="custom-select" id="genderSelect">
+    <div class="selected">
+      <span>Pilih jenis kelamin</span>
+      <i class="fa fa-chevron-down"></i>
+    </div>
+    <ul class="options">
+      <li data-value="male">Laki-laki</li>
+      <li data-value="female">Perempuan</li>
+    </ul>
+  </div>
+</div>
+                        
+                        <div class="form-group">
+                            <label for="weight">Berat Badan (kg)</label>
+                            <input type="number" id="weight" step="0.1" min="1" max="50" placeholder="Contoh: 10.5" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="height">Tinggi Badan (cm)</label>
+                            <input type="number" id="height" step="0.1" min="30" max="150" placeholder="Contoh: 75.2" required>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-brain"></i> Analisis dengan AI
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="result-container">
+                    <div class="result-card">
+                        <h3>Hasil Analisis</h3>
+                        <div class="result-placeholder">
+                            <i class="fas fa-microscope"></i>
+                            <p>Data akan dianalisis setelah Anda mengisi form</p>
+                        </div>
+                        <div class="result-content hidden">
+                            <div class="status-indicator">
+                                <i class="fas fa-check-circle"></i>
+                                <h4 id="status-text">Status: Normal</h4>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="risk-progress"></div>
+                            </div>
+                            <p class="risk-percentage" id="risk-percentage">Risiko Stunting: 15%</p>
+                            <div class="recommendations">
+                                <h4>Rekomendasi:</h4>
+                                <ul id="recommendation-list">
+                                    <li>Penuhi kebutuhan gizi harian</li>
+                                    <li>Lakukan pemeriksaan rutin</li>
+                                </ul>
+                            </div>
+                                <button id="download-btn" class="download-btn">
+        <i class="fas fa-download"></i> Download Hasil
+    </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!-- Education Section -->
+<section id="education" class="education slide-in">
+  <div class="container">
+    <h2 class="section-title">Edukasi Pencegahan Stunting</h2>
+    <div class="education-cards">
+      
+      <div class="edu-card animate-slide-in">
+        <i class="fas fa-apple-alt"></i>
+        <h3>Gizi Seimbang</h3>
+        <p>Pastikan asupan gizi yang cukup dan seimbang untuk tumbuh kembang optimal.</p>
+      </div>
+      
+      <div class="edu-card animate-slide-in">
+        <i class="fas fa-baby"></i>
+        <h3>ASI Eksklusif</h3>
+        <p>Berikan ASI eksklusif hingga bayi berusia 6 bulan untuk fondasi kesehatan yang kuat.</p>
+      </div>
+      
+      <div class="edu-card animate-slide-in">
+        <i class="fas fa-utensils"></i>
+        <h3>MPASI Tepat</h3>
+        <p>Mulai pemberian MPASI bergizi seimbang sejak usia 6 bulan dengan menu beragam.</p>
+      </div>
+      
+      <div class="edu-card animate-slide-in">
+        <i class="fas fa-syringe"></i>
+        <h3>Imunisasi</h3>
+        <p>Lengkapi imunisasi sesuai jadwal untuk mencegah penyakit infeksi berbahaya.</p>
+      </div>
+      
+      <div class="edu-card animate-slide-in">
+        <i class="fas fa-hand-holding-water"></i>
+        <h3>Sanitasi</h3>
+        <p>Jaga kebersihan lingkungan dan diri untuk mencegah diare dan infeksi lain.</p>
+      </div>
+      
+      <div class="edu-card animate-slide-in">
+        <i class="fas fa-heartbeat"></i>
+        <h3>Pemantauan</h3>
+        <p>Pantau rutin pertumbuhan anak dengan menimbang berat dan mengukur tinggi badan.</p>
+      </div>
+      
+      <div class="edu-card animate-slide-in">
+        <i class="fas fa-user-nurse"></i>
+        <h3>Konseling Gizi</h3>
+        <p>Ibu hamil dan orang tua mendapat konseling gizi agar tahu kebutuhan anak di setiap usia.</p>
+      </div>
+      
+      <div class="edu-card animate-slide-in">
+        <i class="fas fa-running"></i>
+        <h3>Aktivitas Fisik</h3>
+        <p>Dukung anak aktif bergerak dan bermain untuk melatih motorik serta memperkuat tubuh.</p>
+      </div>
+      
+      <div class="edu-card animate-slide-in">
+        <i class="fas fa-stethoscope"></i>
+        <h3>Pemeriksaan Kesehatan</h3>
+        <p>Lakukan pemeriksaan rutin di posyandu atau fasilitas kesehatan untuk deteksi dini.</p>
+      </div>
+      
+      <div class="edu-card animate-slide-in">
+        <i class="fas fa-users"></i>
+        <h3>Dukungan Keluarga</h3>
+        <p>Keterlibatan ayah dan keluarga besar penting dalam pemenuhan gizi dan perawatan anak.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Progress Bar Atas -->
+<div class="footer-progress"></div>
+
+<footer id="contact">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Digital Posyandu</h3>
+                <p>Deteksi dini stunting dengan teknologi AI untuk masa depan anak yang lebih baik, dan dibuat dengan ❤️ oleh developer kami.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Kontak</h3>
+                <p><i class="fas fa-envelope"></i> htx.hunter.onion@gmail.com</p>
+                <p><i class="fas fa-phone"></i> 087742898019 </p>
+                <p>
+                    <a href="https://www.youtube.com/@ZakrenzReal" target="_blank" class="youtube-link">
+                        <i class="fab fa-youtube"></i> ZakrenzModder
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Digital Posyandu - Deteksi Stunting dengan AI</p>
+        </div>
+    </div>
+</footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
