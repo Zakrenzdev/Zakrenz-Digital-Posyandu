@@ -408,18 +408,3 @@ document.addEventListener("click", () => {
 });
 
 });
-
-const sliders = document.querySelectorAll('.slide-in');
-
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      observer.unobserve(entry.target); // cuma sekali
-    }
-  });
-}, {
-  threshold: 0.15
-});
-
-sliders.forEach(el => observer.observe(el));
