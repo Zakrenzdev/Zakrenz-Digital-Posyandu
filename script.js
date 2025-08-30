@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function() {
     const themeSwitch = document.getElementById('theme-switch');
     const body = document.body;
@@ -59,6 +60,40 @@ document.addEventListener('DOMContentLoaded', function() {
     const riskPercentage = document.getElementById('risk-percentage');
     const riskProgress = document.getElementById('risk-progress');
     const recommendationList = document.getElementById('recommendation-list');
+
+    // Inisialisasi custom select untuk gender
+    document.querySelectorAll(".custom-select").forEach(select => {
+        const selected = select.querySelector(".selected span");
+        const options = select.querySelector(".options");
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'gender';
+        hiddenInput.id = 'gender';
+        select.appendChild(hiddenInput);
+
+        // Toggle buka/tutup
+        select.querySelector(".selected").addEventListener("click", (e) => {
+            e.stopPropagation();
+            select.classList.toggle("active");
+        });
+
+        // Pilih opsi
+        options.querySelectorAll("li").forEach(option => {
+            option.addEventListener("click", (e) => {
+                e.stopPropagation();
+                selected.textContent = option.textContent;
+                hiddenInput.value = option.getAttribute('data-value');
+                select.classList.remove("active");
+            });
+        });
+    });
+
+    // Tutup dropdown kalau klik di luar
+    document.addEventListener("click", () => {
+        document.querySelectorAll(".custom-select.active").forEach(select => {
+            select.classList.remove("active");
+        });
+    });
 
     stuntingForm.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -275,8 +310,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const name = document.getElementById('name').value;
             const age = document.getElementById('age').value;
-            const genderSelect = document.getElementById('gender');
-            const gender = genderSelect.options[genderSelect.selectedIndex].text;
+            const gender = document.getElementById('gender').value;
+            const genderText = gender === 'male' ? 'Laki-laki' : 'Perempuan';
             const weight = document.getElementById('weight').value;
             const height = document.getElementById('height').value;
             
@@ -293,7 +328,7 @@ DATA ANAK:
 -----------
 Nama: ${name}
 Usia: ${age} bulan
-Jenis Kelamin: ${gender}
+Jenis Kelamin: ${genderText}
 Berat Badan: ${weight} kg
 Tinggi Badan: ${height} cm
 
@@ -304,7 +339,7 @@ ${risk}
 
 REKOMENDASI:
 ------------
-${recommendations}
+• ${recommendations}
 
 =====================================================
 Dicetak dari Digital Posyandu
@@ -379,32 +414,4 @@ Waktu: ${new Date().toLocaleTimeString('id-ID', {
             navLinks.style.display = 'none';
         }
     });
-    
-document.querySelectorAll(".custom-select").forEach(select => {
-  const selected = select.querySelector(".selected span");
-  const options = select.querySelector(".options");
-
-  // Toggle buka/tutup
-  select.querySelector(".selected").addEventListener("click", (e) => {
-    e.stopPropagation(); // cegah bubbling
-    select.classList.toggle("active");
-  });
-
-  // Pilih opsi
-  options.querySelectorAll("li").forEach(option => {
-    option.addEventListener("click", (e) => {
-      e.stopPropagation(); // biar ga trigger parent
-      selected.textContent = option.textContent;
-      select.classList.remove("active");
-    });
-  });
-});
-
-// Tutup dropdown kalau klik di luar
-document.addEventListener("click", () => {
-  document.querySelectorAll(".custom-select.active").forEach(select => {
-    select.classList.remove("active");
-  });
-});
-
 });
