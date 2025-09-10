@@ -163,38 +163,38 @@ document.addEventListener('DOMContentLoaded', function() {
         resultContent.classList.add('hidden');
 
         setTimeout(() => {
-            const heightInMeter = height / 100;
-            const bmi = weight / (heightInMeter * heightInMeter);
-
-            // Calculate risk score
-            const riskScore = calculateRiskScore(age, gender, weight, height, bmi);
+            // Hitung Z-score berdasarkan standar WHO
+            const zScore = calculateHeightForAgeZScore(age, gender, height);
             
-            // Determine status
-            let status, statusIcon, progressColor;
+            // Tentukan status berdasarkan Z-score
+            let status, statusIcon, progressColor, riskScore;
             
-            if (riskScore < 30) {
+            if (zScore >= -2) {
                 status = "Normal";
                 statusIcon = "fa-check-circle";
                 progressColor = "var(--success)";
-            } else if (riskScore < 60) {
-                status = "Beresiko";
+                riskScore = Math.min(Math.max(0, Math.round((-zScore / 4) * 100)), 30);
+            } else if (zScore >= -3) {
+                status = "Stunting Ringan";
                 statusIcon = "fa-exclamation-triangle";
                 progressColor = "var(--warning)";
+                riskScore = Math.min(Math.max(31, Math.round(((-zScore - 2) / 1) * 35 + 30)), 65);
             } else {
-                status = "Stunting";
+                status = "Stunting Berat";
                 statusIcon = "fa-exclamation-circle";
                 progressColor = "var(--danger)";
+                riskScore = Math.min(Math.max(66, Math.round(((-zScore - 3) / 2) * 34 + 65)), 100);
             }
 
             // Update UI
             statusText.innerHTML = `Status: <span>${status}</span>`;
             document.querySelector(".status-indicator i").className = `fas ${statusIcon}`;
-            riskPercentage.textContent = `Risiko Stunting: ${riskScore}%`;
+            riskPercentage.textContent = `Z-score: ${zScore.toFixed(2)} | Risiko: ${riskScore}%`;
             riskProgress.style.width = `${riskScore}%`;
             riskProgress.style.backgroundColor = progressColor;
 
             // Generate recommendations
-            const recommendations = generateRecommendations(riskScore, age, gender, bmi);
+            const recommendations = generateRecommendations(zScore, age, gender);
             recommendationList.innerHTML = "";
             recommendations.forEach(rec => {
                 const li = document.createElement("li");
@@ -211,69 +211,74 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1500);
     }
 
-    // Function to calculate risk score (simplified simulation)
-    function calculateRiskScore(age, gender, weight, height, bmi) {
-        let risk = 0;
+    // Fungsi untuk menghitung Z-score berdasarkan standar WHO
+    function calculateHeightForAgeZScore(ageInMonths, gender, height) {
+        // Data median dan standar deviasi berdasarkan standar pertumbuhan WHO
+        // Data ini hanya contoh, untuk implementasi nyata perlu data lengkap dari WHO
+        const whoStandards = {
+            male: {
+                // Median height (cm) untuk anak laki-laki per bulan (0-60 bulan)
+                median: [49.9, 54.7, 58.4, 61.4, 63.9, 65.9, 67.6, 69.2, 70.6, 71.8, 72.9, 74.0, 
+                        74.9, 75.8, 76.6, 77.4, 78.1, 78.8, 79.5, 80.2, 80.8, 81.4, 82.0, 82.6,
+                        83.1, 83.7, 84.2, 84.7, 85.2, 85.7, 86.2, 86.7, 87.2, 87.6, 88.1, 88.5,
+                        88.9, 89.3, 89.7, 90.1, 90.5, 90.9, 91.3, 91.7, 92.1, 92.4, 92.8, 93.2,
+                        93.5, 93.9, 94.2, 94.6, 94.9, 95.3, 95.6, 96.0, 96.3, 96.7, 97.0, 97.3],
+                // Standard deviation untuk anak laki-laki
+                sd: [1.9, 2.1, 2.2, 2.3, 2.4, 2.5, 2.5, 2.6, 2.6, 2.7, 2.7, 2.8, 
+                     2.8, 2.8, 2.9, 2.9, 2.9, 3.0, 3.0, 3.0, 3.0, 3.1, 3.1, 3.1,
+                     3.1, 3.1, 3.2, 3.2, 3.2, 3.2, 3.2, 3.3, 3.3, 3.3, 3.3, 3.3,
+                     3.3, 3.4, 3.4, 3.4, 3.4, 3.4, 3.4, 3.5, 3.5, 3.5, 3.5, 3.5,
+                     3.5, 3.5, 3.6, 3.6, 3.6, 3.6, 3.6, 3.6, 3.6, 3.7, 3.7, 3.7]
+            },
+            female: {
+                // Median height (cm) untuk anak perempuan per bulan (0-60 bulan)
+                median: [49.1, 53.7, 57.1, 59.8, 62.1, 64.0, 65.7, 67.3, 68.7, 70.1, 71.5, 72.8,
+                        74.0, 75.2, 76.4, 77.5, 78.6, 79.7, 80.7, 81.7, 82.7, 83.7, 84.6, 85.5,
+                        86.4, 87.3, 88.1, 88.9, 89.7, 90.5, 91.2, 91.9, 92.6, 93.3, 94.0, 94.6,
+                        95.2, 95.8, 96.4, 97.0, 97.6, 98.1, 98.6, 99.2, 99.7, 100.2, 100.7, 101.2,
+                        101.7, 102.2, 102.7, 103.2, 103.7, 104.2, 104.6, 105.1, 105.5, 106.0, 106.4, 106.8],
+                // Standard deviation untuk anak perempuan
+                sd: [1.8, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.5, 2.6, 2.7, 2.7, 2.8,
+                     2.8, 2.9, 2.9, 2.9, 3.0, 3.0, 3.0, 3.1, 3.1, 3.1, 3.1, 3.2,
+                     3.2, 3.2, 3.2, 3.3, 3.3, 3.3, 3.3, 3.3, 3.4, 3.4, 3.4, 3.4,
+                     3.4, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.6, 3.6, 3.6, 3.6, 3.6,
+                     3.6, 3.7, 3.7, 3.7, 3.7, 3.7, 3.7, 3.8, 3.8, 3.8, 3.8, 3.8]
+            }
+        };
 
-        // Expected height based on age (WHO simplified)
-        const expectedHeight = getExpectedHeight(age, gender);
-        const heightDiff = height - expectedHeight;
-
-        // Height factor
-        if (heightDiff < -10) risk += 60;
-        else if (heightDiff < -5) risk += 40;
-        else if (heightDiff < 0) risk += 20;
-
-        // BMI factor
-        if (bmi < 14) risk += 30;
-        else if (bmi < 16) risk += 20;
-        else if (bmi < 18) risk += 10;
-
-        // Age factor
-        risk += age * 0.2;
-
-        // Gender factor
-        if (gender === "female") risk *= 0.95;
-
-        // Add some randomness to make it feel more AI-like
-        risk += (Math.random() * 5);
-
-        return Math.min(Math.round(risk), 100);
+        // Pastikan usia dalam rentang yang valid (0-60 bulan)
+        const age = Math.max(0, Math.min(ageInMonths, 60));
+        
+        // Dapatkan median dan SD berdasarkan usia dan gender
+        const median = whoStandards[gender].median[age];
+        const sd = whoStandards[gender].sd[age];
+        
+        // Hitung Z-score: (nilai observasi - median) / standar deviasi
+        const zScore = (height - median) / sd;
+        
+        return zScore;
     }
 
-    // Function to get expected height based on age and gender
-    function getExpectedHeight(age, gender) {
-        if (gender === "male") {
-            if (age <= 12) return 75;
-            if (age <= 24) return 87;
-            if (age <= 36) return 96;
-            if (age <= 48) return 103;
-            return 110;
-        } else {
-            if (age <= 12) return 74;
-            if (age <= 24) return 86;
-            if (age <= 36) return 95;
-            if (age <= 48) return 102;
-            return 109;
-        }
-    }
-
-    // Function to generate recommendations based on risk
-    function generateRecommendations(riskScore, age, gender, bmi) {
+    // Function to generate recommendations based on Z-score
+    function generateRecommendations(zScore, age, gender) {
         const recommendations = [];
 
-        if (riskScore < 30) {
+        if (zScore >= -2) {
             recommendations.push(
                 "Pertahankan pola makan bergizi seimbang",
                 "Lakukan pemeriksaan rutin setiap bulan di Posyandu",
-                "Pastikan anak aktif bergerak dan bermain"
+                "Pastikan anak aktif bergerak dan bermain",
+                "Berikan ASI eksklusif hingga 6 bulan (jika masih dalam usia)",
+                "Pastikan kecukupan tidur dan istirahat"
             );
-        } else if (riskScore < 60) {
+        } else if (zScore >= -3) {
             recommendations.push(
                 "Tingkatkan asupan protein hewani (telur, ikan, daging)",
-                "Konsultasi dengan tenaga kesehatan",
+                "Konsultasi dengan tenaga kesehatan di Puskesmas",
                 "Pantau pertumbuhan setiap 2 minggu",
-                "Tambahkan makanan kaya zinc dan zat besi"
+                "Tambahkan makanan kaya zinc dan zat besi",
+                "Pastikan kebersihan lingkungan untuk mencegah infeksi",
+                "Berikan MPASI dengan gizi lengkap dan seimbang (jika sudah usia 6+ bulan)"
             );
         } else {
             recommendations.push(
@@ -281,23 +286,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 "Perbaiki kualitas & kuantitas makanan harian",
                 "Lakukan stimulasi perkembangan secara intensif",
                 "Pastikan lingkungan bersih dan sanitasi baik",
-                "Ikuti program intervensi gizi terpadu dari pemerintah"
+                "Ikuti program intervensi gizi terpadu dari pemerintah",
+                "Lakukan pemeriksaan kesehatan menyeluruh untuk deteksi dini penyakit penyerta"
             );
         }
 
         // Age-specific recommendations
         if (age < 6) {
-            recommendations.push("Pastikan pemberian ASI eksklusif");
-        } else if (age < 12) {
-            recommendations.push("Mulai perkenalkan MPASI dengan gizi seimbang");
+            recommendations.push("Prioritaskan pemberian ASI eksklusif");
         } else if (age < 24) {
-            recommendations.push("Variasikan makanan keluarga dengan protein, sayur, dan buah");
+            recommendations.push("Berikan MPASI dengan frekuensi dan porsi sesuai usia");
+            recommendations.push("Variasi makanan dengan tekstur yang sesuai perkembangan");
         } else {
             recommendations.push("Ajarkan kebiasaan makan sehat & kebersihan diri sejak dini");
+            recommendations.push("Libatkan anak dalam aktivitas fisik yang menyenangkan");
         }
 
         return recommendations;
     }
+
+
+    // Function to generate recommendations based on risk
 
     // Function to download result as text file
     function downloadResult() {
